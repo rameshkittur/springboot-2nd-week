@@ -1,5 +1,6 @@
 # springboot-2nd-week
 This repository contains structure of basic spring boot project(MVC)
+# Author ramesh kittur
 
 This repository includes codes related to topics like 
 - spring boot mvc architecture
