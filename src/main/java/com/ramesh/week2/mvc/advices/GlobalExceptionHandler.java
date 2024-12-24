@@ -13,35 +13,44 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ApiErrors handleResourceNotFoundException(ResourceNotFoundException e) {
-        return ApiErrors
+    public ApiResponse<?> handleResourceNotFoundException(ResourceNotFoundException e) {
+        ApiErrors apiErrors = ApiErrors
                 .builder()
                 .status(HttpStatus.NOT_FOUND)
                 .message(e.getMessage())
                 .build();
+        return buildErrorResponse(apiErrors);
     }
 
     @ExceptionHandler(Exception.class)
-    public ApiErrors handleInternalServerError(Exception e){
-        return ApiErrors
+    public ApiResponse<?> handleInternalServerError(Exception e) {
+        ApiErrors apiErrors = ApiErrors
                 .builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(e.getMessage())
                 .build();
+
+        return buildErrorResponse(apiErrors);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiErrors handleInputValidationError(MethodArgumentNotValidException e){
-        List<String>errors = e.getBindingResult()
+    public ApiResponse<?> handleInputValidationError(MethodArgumentNotValidException e) {
+        List<String> errors = e.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
-        return ApiErrors
+        ApiErrors apiErrors = ApiErrors
                 .builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message("Input validation error")
                 .subErrors(errors)
                 .build();
+
+        return buildErrorResponse(apiErrors);
+    }
+
+    private ApiResponse<?> buildErrorResponse(ApiErrors apiErrors) {
+        return new ApiResponse<>(apiErrors);
     }
 }

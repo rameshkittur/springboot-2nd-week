@@ -33,8 +33,6 @@ public class EmployeeController {
        return employeeRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Element not found with the id : "+id));
     }
 
-
-
     @GetMapping
     public List<EmployeeEntity> getAllEmployee(){
         return employeeRepository.findAll();

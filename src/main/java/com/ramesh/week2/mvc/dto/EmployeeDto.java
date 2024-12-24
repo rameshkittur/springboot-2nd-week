@@ -11,9 +11,9 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-
 public class EmployeeDto {
 
+    private Long id;
     private String name;
 
     @NotEmpty(message = "email is required")

@@ -2,6 +2,7 @@ package com.ramesh.week2.mvc.services;
 
 import com.ramesh.week2.mvc.dto.EmployeeDto;
 import com.ramesh.week2.mvc.entities.EmployeeEntity;
+import com.ramesh.week2.mvc.exception.ResourceNotFoundException;
 import com.ramesh.week2.mvc.repositories.EmployeeRepository;
 import org.apache.el.util.ReflectionUtil;
 import org.modelmapper.ModelMapper;
@@ -30,7 +31,8 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public EmployeeDto partialUpdate(Long employeeId, Map<String, Object> updates) {
-        EmployeeEntity employee = employeeRepository.findById(employeeId).orElseThrow(()->new RuntimeException("Not found any record"));
+        EmployeeEntity employee = employeeRepository.findById(employeeId)
+                .orElseThrow(()->new ResourceNotFoundException("Employee not found for the id "+employeeId));
         updates.forEach((field,value)->{
             Field fieldToBeUpdate = ReflectionUtils.findField(EmployeeEntity.class,field);
             fieldToBeUpdate.setAccessible(true);
